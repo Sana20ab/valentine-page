@@ -1,25 +1,13 @@
 const yesButton = document.getElementById("yes-btn");
 const noButton = document.getElementById("no-btn");
-
 const buttonsContainer = document.querySelector(".buttons");
 
+/* Utility */
 function getDistance(x1, y1, x2, y2) {
     return Math.hypot(x1 - x2, y1 - y2);
 }
 
-// Store original position of "No" button
-const initialNoPosition = {
-    x: noButton.offsetLeft,
-    y: noButton.offsetTop
-};
-
-const escapeZone = {
-    minX: 0,
-    maxX: 260,
-    minY: 0,
-    maxY: 80
-};
-
+/* -------- NO BUTTON ESCAPE -------- */
 
 document.addEventListener("mousemove", (event) => {
     const noRect = noButton.getBoundingClientRect();
@@ -45,51 +33,51 @@ document.addEventListener("mousemove", (event) => {
         yesCenterY
     );
 
-    // --- NO BUTTON ESCAPE (local only) ---
-if (distanceToNo < 90) {
-    const containerRect = buttonsContainer.getBoundingClientRect();
+    if (distanceToNo < 90) {
+        const containerRect = buttonsContainer.getBoundingClientRect();
 
-    const newX =
-        escapeZone.minX +
-        Math.random() * (escapeZone.maxX - escapeZone.minX);
+        const newX = Math.random() * (containerRect.width - noRect.width);
+        const newY = Math.random() * (containerRect.height - noRect.height);
 
-    const newY =
-        escapeZone.minY +
-        Math.random() * (escapeZone.maxY - escapeZone.minY);
+        noButton.style.left = `${newX}px`;
+        noButton.style.top = `${newY}px`;
+    }
 
-    const clampedX = Math.min(
-        newX,
-        containerRect.width - noRect.width
-    );
-
-    const clampedY = Math.min(
-        newY,
-        containerRect.height - noRect.height
-    );
-
-    noButton.style.left = `${clampedX}px`;
-    noButton.style.top = `${clampedY}px`;
-}
-
-
-    // --- YES BUTTON GROW ---
+    /* YES button grows */
     const maxScale = 1.5;
     const minScale = 1;
     const influenceRadius = 200;
 
     const scale =
         distanceToYes < influenceRadius
-            ? maxScale - (distanceToYes / influenceRadius) * (maxScale - minScale)
+            ? maxScale -
+              (distanceToYes / influenceRadius) *
+                  (maxScale - minScale)
             : minScale;
 
     yesButton.style.transform = `scale(${scale})`;
 });
 
-// --- YES CLICK MESSAGE ---
+/* -------- CURSOR HEARTS -------- */
+
+document.addEventListener("mousemove", (event) => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "💗";
+    heart.style.left = `${event.clientX}px`;
+    heart.style.top = `${event.clientY}px`;
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 1000);
+});
+
+/* -------- YES CLICK CELEBRATION -------- */
+
 yesButton.addEventListener("click", () => {
-    const symbols = ["💖", "🌹", "💘", "🌷". "❤️"];
-    const showerDuration = 2000;
-    const interval = 40;
+    const symbols = ["💖", "🌹", "💘", "🌷" ,"❤️"];
+    const duration = 2000;
+    const intervalTime = 80;
 
     const shower = setInterval(() => {
         const particle = document.createElement("div");
@@ -98,14 +86,12 @@ yesButton.addEventListener("click", () => {
             symbols[Math.floor(Math.random() * symbols.length)];
 
         particle.style.left = `${Math.random() * 100}vw`;
-        particle.style.fontSize = `${16 + Math.random() * 20}px`;
+        particle.style.fontSize = `${18 + Math.random() * 20}px`;
 
         document.body.appendChild(particle);
 
-        setTimeout(() => {
-            particle.remove();
-        }, 2500);
-    }, interval);
+        setTimeout(() => particle.remove(), 2500);
+    }, intervalTime);
 
     setTimeout(() => {
         clearInterval(shower);
@@ -118,21 +104,5 @@ yesButton.addEventListener("click", () => {
                 💖 Happy Valentine’s Day, cutie 💖
             </h1>
         `;
-    }, showerDuration);
-});
-
-
-document.addEventListener("mousemove", (event) => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "💗";
-
-    heart.style.left = `${event.clientX}px`;
-    heart.style.top = `${event.clientY}px`;
-
-    document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 1000);
+    }, duration);
 });
