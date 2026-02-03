@@ -87,12 +87,40 @@ if (distanceToNo < 90) {
 
 // --- YES CLICK MESSAGE ---
 yesButton.addEventListener("click", () => {
-    document.body.innerHTML = `
-        <h1 style="font-family: system-ui; text-align: center;">
-            💖 Happy Valentine’s Day, cutie 💖
-        </h1>
-    `;
+    const symbols = ["💖", "🌹", "💘", "🌷". "❤️"];
+    const showerDuration = 2000;
+    const interval = 40;
+
+    const shower = setInterval(() => {
+        const particle = document.createElement("div");
+        particle.className = "falling";
+        particle.textContent =
+            symbols[Math.floor(Math.random() * symbols.length)];
+
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.fontSize = `${16 + Math.random() * 20}px`;
+
+        document.body.appendChild(particle);
+
+        setTimeout(() => {
+            particle.remove();
+        }, 2500);
+    }, interval);
+
+    setTimeout(() => {
+        clearInterval(shower);
+        document.body.innerHTML = `
+            <h1 style="
+                font-family: system-ui;
+                text-align: center;
+                margin-top: 40vh;
+            ">
+                💖 Happy Valentine’s Day, cutie 💖
+            </h1>
+        `;
+    }, showerDuration);
 });
+
 
 document.addEventListener("mousemove", (event) => {
     const heart = document.createElement("div");
