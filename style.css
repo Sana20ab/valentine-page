@@ -28,3 +28,21 @@ button {
 #no-btn {
     position: absolute;
 }
+
+.heart {
+    position: fixed;
+    font-size: 16px;
+    pointer-events: none;
+    animation: floatUp 1s ease-out forwards;
+}
+
+@keyframes floatUp {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-30px) scale(1.5);
+    }
+}
