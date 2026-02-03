@@ -13,6 +13,14 @@ const initialNoPosition = {
     y: noButton.offsetTop
 };
 
+const escapeZone = {
+    minX: 0,
+    maxX: 260,
+    minY: 0,
+    maxY: 80
+};
+
+
 document.addEventListener("mousemove", (event) => {
     const noRect = noButton.getBoundingClientRect();
     const yesRect = yesButton.getBoundingClientRect();
@@ -38,25 +46,31 @@ document.addEventListener("mousemove", (event) => {
     );
 
     // --- NO BUTTON ESCAPE (local only) ---
-    if (distanceToNo < 80) {
-        const radius = 120;
+if (distanceToNo < 90) {
+    const containerRect = buttonsContainer.getBoundingClientRect();
 
-        let newX =
-            initialNoPosition.x +
-            (Math.random() * radius * 2 - radius);
+    const newX =
+        escapeZone.minX +
+        Math.random() * (escapeZone.maxX - escapeZone.minX);
 
-        let newY =
-            initialNoPosition.y +
-            (Math.random() * radius * 2 - radius);
+    const newY =
+        escapeZone.minY +
+        Math.random() * (escapeZone.maxY - escapeZone.minY);
 
-        const containerRect = buttonsContainer.getBoundingClientRect();
+    const clampedX = Math.min(
+        newX,
+        containerRect.width - noRect.width
+    );
 
-        newX = Math.max(0, Math.min(newX, containerRect.width - noRect.width));
-        newY = Math.max(0, Math.min(newY, containerRect.height - noRect.height));
+    const clampedY = Math.min(
+        newY,
+        containerRect.height - noRect.height
+    );
 
-        noButton.style.left = `${newX}px`;
-        noButton.style.top = `${newY}px`;
-    }
+    noButton.style.left = `${clampedX}px`;
+    noButton.style.top = `${clampedY}px`;
+}
+
 
     // --- YES BUTTON GROW ---
     const maxScale = 1.5;
